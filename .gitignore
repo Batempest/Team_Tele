@@ -72,3 +72,9 @@ Plugins/**/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# Ignore all asset files (including StarterContent)
+Content/**/*.uasset
+
+# But include level files (.umap) like Maps/MyLevel.umap
+!Content/**/*.umap
