@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+// Blackhole.h
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Blackhole.generated.h"
 
 UCLASS()
@@ -11,16 +14,29 @@ class TEAM_TELE_API ABlackhole : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
+public:
 	ABlackhole();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
+public:
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* SphereGravityComp;
+
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USphereComponent* SphereDestroyComp;
+
+	void CheckNearbyActors();
+
+	UFUNCTION()
+	void OverlapInnerSphere(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };
