@@ -78,3 +78,11 @@ Content/**/*.uasset
 
 # But include level files (.umap) like Maps/MyLevel.umap
 !Content/**/*.umap
+
+# Archives (큰 압축파일은 아예 무시)
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tgz
