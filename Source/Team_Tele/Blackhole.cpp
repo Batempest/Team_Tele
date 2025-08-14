@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Kismet/KismetSystemLibrary.h" 
 #include "Engine/EngineTypes.h"
+#include "GameFramework/Pawn.h"
 
 // Sets default values
 ABlackhole::ABlackhole()
@@ -68,16 +69,46 @@ void ABlackhole::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// 추가: 입력 활성화 + 바인딩
 	if (APlayerController* PC = GetWorld()->GetFirstPlayerController())
 	{
+		CachedPC = PC;
+
 		EnableInput(PC);
 		if (InputComponent)
 		{
 			InputComponent->BindAxis(TEXT("MoveForward"), this, &ABlackhole::MoveForward);
 			InputComponent->BindAxis(TEXT("MoveRight"), this, &ABlackhole::MoveRight);
 			InputComponent->BindAxis(TEXT("MoveUp"), this, &ABlackhole::MoveUp);
+
+			// ==== [추가] Tab 키 바인딩 ====
+			InputComponent->BindAction(TEXT("ToggleControl"), IE_Pressed, this, &ABlackhole::ToggleControl);
 		}
+	}
+}
+
+// ==== [추가] 토글 함수 구현 ====
+void ABlackhole::ToggleControl()
+{
+	if (!CachedPC) return;
+
+	bControllingBlackhole = !bControllingBlackhole;
+
+	// 플레이어 Pawn 가져오기
+	APawn* PlayerPawn = CachedPC->GetPawn();
+	if (bControllingBlackhole)
+	{
+		// 블랙홀 ON, 플레이어 OFF
+		EnableInput(CachedPC);
+		if (PlayerPawn) PlayerPawn->DisableInput(CachedPC);
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.2f, FColor::Cyan, TEXT("Control: BLACKHOLE"));
+	}
+	else
+	{
+		// 블랙홀 OFF, 플레이어 ON
+		if (PlayerPawn) PlayerPawn->EnableInput(CachedPC);
+
+		GEngine->AddOnScreenDebugMessage(-1, 1.2f, FColor::Green, TEXT("Control: PLAYER"));
 	}
 }
 

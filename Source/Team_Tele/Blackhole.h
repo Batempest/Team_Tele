@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/PlayerController.h"
 #include "Blackhole.generated.h"
 
 UCLASS()
@@ -32,6 +33,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USphereComponent* SphereDestroyComp;
+
+	// ==== [추가] 플레이어 ↔ 블랙홀 조종 전환 관련 ====
+	bool bControllingBlackhole = false;
+	APlayerController* CachedPC = nullptr;
+
+	void ToggleControl(); // Tab 키로 호출
 
 	// 이동 속도 & 입력 처리 함수 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
